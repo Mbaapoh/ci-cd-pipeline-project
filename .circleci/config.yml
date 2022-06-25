@@ -150,11 +150,12 @@ jobs:
                 --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} 
             when: on_fail 
       
-      - run: echo "[web]" > ~/project/.circleci/ansible/inventory.txt  
+    
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             yum install -y tar gzip
+            echo "[web]" > ~/project/.circleci/ansible/inventory.txt  
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople"
@@ -176,7 +177,7 @@ jobs:
           at: ~/
       - run: 
           name: View content of inventory.txt
-          command: cat  project/.circleci/ansible/inventory.txt  
+          command: cat  ~/project/.circleci/ansible/inventory.txt  
       - run:
           name: Install dependencies
           command: |
