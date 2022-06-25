@@ -150,13 +150,14 @@ jobs:
                 --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} 
             when: on_fail 
       
-         
+      - run: echo "[web]" > ~/project/.circleci/ansible/inventory.txt  
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             yum install -y tar gzip
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:project,Values=udapeople"
               --output text >> ~/project/.circleci/ansible/inventory.txt  
       - persist_to_workspace:
           root: ~/
