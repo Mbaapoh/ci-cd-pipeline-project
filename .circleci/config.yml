@@ -157,11 +157,11 @@ jobs:
             yum install -y tar gzip
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> ansible/inventory.txt
+              --output text >> ~/inventory.txt
       - persist_to_workspace:
-          root: ansible
+          root: ~/
           paths:
-            - inventory.txt
+            - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure   
               
   configure-infrastructure:
@@ -172,10 +172,10 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["73:9f:36:ee:2d:4b:23:24:23:36:65:bf:78:54:58:46"] 
       - attach_workspace:
-          at: /tmp/ansible
+          at: /tmp/~/
       - run: 
           name: View content of inventory.txt
-          command: cat /tmp/backend/inventory.txt
+          command: cat project/.circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |
