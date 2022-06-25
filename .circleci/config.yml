@@ -167,6 +167,27 @@ jobs:
             aws cloudformation delete-stack \
               --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} \
               
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["73:9f:36:ee:2d:4b:23:24:23:36:65:bf:78:54:58:46"] 
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+            
+              
   
             
 workflows:
