@@ -128,13 +128,28 @@ jobs:
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
               
       - run:
+          name: Destroy back-end infrastructure
+          command: |
+            aws cloudformation delete-stack \
+              --stack-name udapeople-backend-stack-${CIRCLE_WORKFLOW_ID:0:7} \
+          when: on_fail
+              
+      - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=udapeople-project \
               --stack-name "udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+
+      - run:
+            name: Destroy front-end infrastructure 
+            command: |
+              aws cloudformation delete-stack \
+                --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} \
+            when: on_fail 
+      
          
       - run:
           name: Add back-end ip to ansible inventory
@@ -148,24 +163,6 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure   
-  destroy-environment: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Destroy back-end infrastructure
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name udapeople-backend-stack-${CIRCLE_WORKFLOW_ID:0:7} \
-
-      - run:
-          name: Destroy front-end infrastructure 
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} \
               
   configure-infrastructure:
     docker:
@@ -204,8 +201,6 @@ workflows:
       - scan-backend:
           requires: [build-backend]
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      - destroy-environment:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
