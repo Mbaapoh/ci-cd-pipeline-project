@@ -178,7 +178,7 @@ jobs:
           command: |
             # install the dependencies needed for your playbook
             apk add --update ansible 
-      - run: cat inventory.txt
+      - run: cat ~/inventory.txt
       - run:
           name: Configure server
           command: |
