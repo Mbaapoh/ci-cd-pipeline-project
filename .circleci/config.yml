@@ -216,8 +216,6 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Install AWS CLI dependencies
           command: |
