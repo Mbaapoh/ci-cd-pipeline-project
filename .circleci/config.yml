@@ -213,7 +213,7 @@ jobs:
             
   run-migrations:
     docker:
-    image: circleci/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
@@ -224,12 +224,12 @@ jobs:
             # Run and save the migration output
             npm run migrations > migrations_dump.txt
       - run:
-          name: Send migration results to memstash
+          name: Send migration results to kvdb.io
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                # Soting the generated migration successful status in a kvdd bucket for later usage
-                curl https://kvdb.io/9cJfbDP95KHTZqy9vBgffp/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}  -d '1'
+                # Storing the generated migration successful status in a kvdd bucket for later usage
+                curl https://kvdb.io/9cJfbDP95KHTZqy9vBgffp/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}  -d '1'  
             fi          
         
             
