@@ -264,7 +264,7 @@ jobs:
           command: |
             apt-get update && sudo apt-get install -yy less
       - run:
-          name: removing old awscli
+          name: removing old awscli.
           command: |
             rm -rf /bin/aws
       - run:
