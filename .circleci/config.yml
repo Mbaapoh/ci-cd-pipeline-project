@@ -258,15 +258,28 @@ jobs:
             yum install -y unzip 
       - attach_workspace:
           at: ~/.circleci/ansible/inventory.txt 
+
       - run:
-          name: Install dependencies
+          name: Updating OS and dependencies
           command: |
             apt-get update && sudo apt-get install -yy less
+      - run:
+          name: removing old awscli
+          command: |
+            rm -rf /bin/aws
+      - run:
+          name: Install awscli dependencies
+          command: |
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install
+
+      - run:
+          name: Install awscli updates
+          command: |
             ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
             ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update   
+            
       - run:
           name: Get backend url
           command: |
