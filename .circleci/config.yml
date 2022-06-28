@@ -233,6 +233,7 @@ jobs:
       - run:
           name: Send migration results to kvdb.io
           command: |
+            echo "insecure" >> ~/.curlrc
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
                 # Storing the generated migration successful status in a kvdd bucket for later usage
