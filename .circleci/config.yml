@@ -262,7 +262,7 @@ jobs:
       - run:
           name: Updating OS and dependencies
           command: |
-            apt-get update && sudo apt-get install -yy less
+           dnf update && sudo dnf install -yy less
       - run:
           name: removing old awscli.
           command: |
