@@ -255,6 +255,7 @@ jobs:
           command: |
             yum -y install tar
             yum -y install gzip
+            yum install -y unzip 
       - attach_workspace:
           at: ~/.circleci/ansible/inventory.txt 
       - run:
