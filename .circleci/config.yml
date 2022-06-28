@@ -250,8 +250,6 @@ jobs:
 
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Install tar/gzip utility
           command: |
@@ -264,7 +262,8 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install
-            
+      - attach_workspace:
+          at: ~/.circleci/ansible/inventory.txt      
       - run:
           name: Get backend url
           command: |
