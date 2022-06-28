@@ -262,7 +262,7 @@ jobs:
       - run:
           name: Updating OS and dependencies
           command: |
-           dnf update && sudo dnf install -yy less
+           yum update && sudo yum install -yy less
       - run:
           name: removing old awscli.
           command: |
