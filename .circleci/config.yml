@@ -245,7 +245,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: circleci/node:13.8.0
         user: root
 
     steps:
@@ -255,7 +255,10 @@ jobs:
           command: |
             cat /etc/os-release
             pwd
-  
+      - attach_workspace:
+              at: ~/
+              paths:
+                  - project/.circleci/ansible/inventory.txt
       - run:
           name: Install tar/gzip utility
           command: |
@@ -271,7 +274,6 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install
-       
             
       - run:
           name: Get backend url
