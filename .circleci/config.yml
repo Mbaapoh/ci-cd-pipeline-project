@@ -251,8 +251,10 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Checking OS distro
-        command: |
+          name: Checking OS distro
+          command: |
+            cat /etc/os-release
+            lsb_release -a
             hostnamectl
       - run:
           name: Install tar/gzip utility
