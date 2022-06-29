@@ -245,11 +245,17 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/aws
+      - image: amazon/aws-cli
         user: root
 
     steps:
       - checkout
+      - run:
+        name: Checking OS distro
+        command: |
+            cat /etc/os-release
+            lsb_release -a
+            hostnamectl
       - run:
           name: Install tar/gzip utility
           command: |
