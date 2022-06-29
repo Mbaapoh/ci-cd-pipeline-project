@@ -200,8 +200,7 @@ jobs:
             # install the dependencies needed for your playbook
             apk add --update ansible 
             pip install awscli
-            aws --version
-      
+            
       - run:
           name: Configure server
           command: |
