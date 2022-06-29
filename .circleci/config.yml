@@ -256,11 +256,16 @@ jobs:
             cat /etc/os-release
             pwd
       - attach_workspace:
-              at: ~/
-              paths:
-                  - project/.circleci/ansible/inventory.txt
-      - attach_workspace:
-          at: ~/.circleci/ansible/inventory.txt 
+              at: ~/project/.circleci/ansible/inventory.txt
+      - run: 
+          name: Check content of inventory.txt
+          command: cat  ~/project/.circleci/ansible/inventory.txt 
+      - run: 
+          name: Check content of ~/project/.circleci/ansible/
+          command: |
+            cd ~/project/.circleci/ansible/
+            ls -la                 
+      
       - run:
           name: Install aws dependencies
           command: |
