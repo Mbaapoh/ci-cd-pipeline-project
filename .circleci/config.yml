@@ -253,8 +253,6 @@ jobs:
       - run:
         name: Checking OS distro
         command: |
-            cat /etc/os-release
-            lsb_release -a
             hostnamectl
       - run:
           name: Install tar/gzip utility
@@ -267,10 +265,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update && sudo apt-get install -yy less
+            apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
-            sudo ./aws/install
+            ./aws/install
        
             
       - run:
