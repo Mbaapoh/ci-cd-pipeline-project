@@ -254,8 +254,8 @@ jobs:
           name: Checking OS distro
           command: |
             cat /etc/os-release
-            lsb_release -a
-            hostnamectl
+            pwd
+  
       - run:
           name: Install tar/gzip utility
           command: |
