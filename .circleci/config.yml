@@ -245,7 +245,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: cimg/aws
         user: root
 
     steps:
@@ -258,27 +258,14 @@ jobs:
             yum install -y unzip 
       - attach_workspace:
           at: ~/.circleci/ansible/inventory.txt 
-
       - run:
-          name: Updating OS and dependencies
+          name: Install dependencies
           command: |
-           yum update && sudo yum install -yy less
-      - run:
-          name: removing old awscli.
-          command: |
-            rm -rf /bin/aws
-      - run:
-          name: Install awscli dependencies
-          command: |
+            sudo apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
-            ./aws/install
-
-      - run:
-          name: Install awscli updates
-          command: |
-            ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
-            ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update   
+            sudo ./aws/install
+       
             
       - run:
           name: Get backend url
