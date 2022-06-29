@@ -15,7 +15,20 @@ commands:
                 # aws s3 rm s3://udapeoplefrontend<< parameters.workflow_id >> --recursive
                 aws cloudformation delete-stack --stack-name udapeople-backend-stack-<< parameters.workflow_id >> 
                 aws cloudformation delete-stack --stack-name udapeople-frontend-stack-<< parameters.workflow_id >>     
-
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.  
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_success
+          command: |
+            SUCCESS=$(curl https://kvdb.io/9cJfbDP95KHTZqy9vBgffp/migration_$\{CIRCLE_WORKFLOW_ID:0:7\})
+            if (( $SUCCESS == 1 ));
+            then
+            cd ~/project/backend
+            npm install
+            npm run migration:revert
+            fi 
 
 jobs:
   build-frontend:
@@ -239,7 +252,9 @@ jobs:
                 curl https://kvdb.io/9cJfbDP95KHTZqy9vBgffp/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}  -d '1'  
             fi          
       - destroy-environment:
-            workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
+            workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
+      - revert-migrations:  
+            workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
             
 
   deploy-frontend:
@@ -301,7 +316,36 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
-    
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["73:9f:36:ee:2d:4b:23:24:23:36:65:bf:78:54:58:46"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible curl rsync openssh nodejs npm
+            ansible --version
+            pip install awscli
+            aws --version
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      - destroy-environment:
+            workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
 
 workflows:
   default:
