@@ -259,16 +259,10 @@ jobs:
               at: ~/
               paths:
                   - project/.circleci/ansible/inventory.txt
-      - run:
-          name: Install tar/gzip utility
-          command: |
-            yum -y install tar
-            yum -y install gzip
-            yum install -y unzip 
       - attach_workspace:
           at: ~/.circleci/ansible/inventory.txt 
       - run:
-          name: Install dependencies
+          name: Install aws dependencies
           command: |
             apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
