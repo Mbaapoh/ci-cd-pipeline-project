@@ -342,7 +342,11 @@ jobs:
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
+            echo "Reading artifact.tar.gz file path"
+            readlink -f artifact.tar.gz
+            echo "Checking content of circleci/ansible"
             cd .circleci/ansible
+            ls -la
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
@@ -417,10 +421,10 @@ workflows:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-     # - deploy-backend:
-          #requires: [run-migrations]
-      #- smoke-test:
-         #requires: [deploy-backend, deploy-frontend]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
   
 
 
