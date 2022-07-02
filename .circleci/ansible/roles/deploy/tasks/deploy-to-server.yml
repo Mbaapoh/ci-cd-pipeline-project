@@ -1,0 +1,44 @@
+- name: "Install rsync to remote server"
+  become: true
+  apt:
+    name: rsync
+    state: present
+
+- name: "Copying backend files to remote web server using syncronization"
+  synchronize:
+    src: /root/project/backend.tar.gz
+    dest: "~/backend.tar.gz"
+    owner: ubuntu
+    group: ubuntu
+    mode: 0777
+
+
+
+- name: "Check for tar file"
+  become: true
+  command: ls -larth ~/backend.tar.gz
+
+- name: Unarchive a file that is already on the remote machine
+  unarchive:
+    src: ~/backend.tar.gz
+    dest: ~/udapeople-app
+    remote_src: yes
+
+- name: "delete anything that might already be running"
+  become: true
+  command: pm2 delete all
+  ignore_errors: true
+  
+- name: "start server"
+  become: true
+  args:
+    chdir: ~/udapeople-app
+  command: "{{ item }}"
+  loop:
+    - 
+    - pwd
+    - chmod a+rwx /backend
+    - cd /backend
+    - npm install
+    - pm2 stop default
+    - pm2 start npm -- start
