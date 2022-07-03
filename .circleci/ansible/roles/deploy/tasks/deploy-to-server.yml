@@ -4,7 +4,9 @@
     name: rsync
     state: present
   register: apt_command_output
-- debug: var= apt_command_output
+- debug: 
+    var: apt_command_output
+    verbosity: 3
 
 - name: "Copying backend files to remote web server using syncronization"
   synchronize:
@@ -14,7 +16,9 @@
     group: ubuntu
     mode: 0777
   register: check_copy_error
-- debug: var= check_copy_error
+- debug: 
+    var: check_copy_error
+    verbosity: 3
 
 - name: "Check for tar file"
   become: true
@@ -45,4 +49,6 @@
     - pm2 stop default
     - pm2 start npm -- start
   register: check_npm_start_error
-- debug: var= check_npm_start_error
+- debug: 
+    var : check_npm_start_error
+    verbosity: 3
