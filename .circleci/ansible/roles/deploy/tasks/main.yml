@@ -10,8 +10,8 @@
 
 - name: "Copying backend files to remote web server using syncronization"
   synchronize:
-    src:  "/root/project/backend.tar.gz "
-    dest: "~/backend.tar.gz"
+    src:  /root/project/backend.tar.gz
+    dest: ~/backend.tar.gz
     owner: ubuntu
     group: ubuntu
     mode: 0777
