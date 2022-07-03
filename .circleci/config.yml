@@ -341,8 +341,12 @@ jobs:
             npm i
             npm run build
             cd ..
+            echo "Check current directory PWD"
+            pwd
+            ls -la
             tar -C backend -czvf artifact.tar.gz .
-            echo "Reading artifact.tar.gz file path"
+            echo "Checking content of current directory"
+            ls -larth  
             readlink -f artifact.tar.gz
             echo "Checking content of circleci/ansible"
             cd .circleci/ansible
