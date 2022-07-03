@@ -10,7 +10,7 @@
 
 - name: "Copying backend files to remote web server using syncronization"
   synchronize:
-    src:  /root/project/backend.tar.gz
+    src:  /root/project/artifact.tar.gz
     dest: ~/backend.tar.gz
   register: check_copy_error
 - debug: 
