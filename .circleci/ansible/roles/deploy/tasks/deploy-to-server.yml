@@ -20,7 +20,7 @@
   become: true
   command: ls -larth ~/backend.tar.gz
 
-- name: Unarchive a file that is already on the remote machine
+- name: Unarchive a file that is already on the remote machine.
   unarchive:
     src: ~/backend.tar.gz
     dest: ~/udapeople-app
