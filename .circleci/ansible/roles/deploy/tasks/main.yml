@@ -11,7 +11,7 @@
 - name: "Copying backend files to remote web server using syncronization"
   synchronize:
     src:  /root/project/artifact.tar.gz
-    dest: ~/artifact.tar.gz
+    dest: /home/ubuntu/artifact.tar.gz
   register: check_copy_error
 - debug: 
     var: check_copy_error
@@ -19,12 +19,12 @@
 
 - name: "Check for tar file"
   become: true
-  command: ls -larth ~/artifact.tar.gz
+  command: ls -larth ~/
 
 - name: Unarchive a file that is already on the remote machine.
   unarchive:
-    src: ~/artifact.tar.gz
-    dest: ~/udapeople-app
+    src: /home/ubuntu/artifact.tar.gz
+    dest: /home/ubuntu/udapeople-app
     remote_src: yes
 
 - name: "delete anything that might already be running"
@@ -40,7 +40,7 @@
   loop:
     - 
     - pwd
-    - chmod a+rwx /udapeople-app
+    - chmod a+rwx /home/ubuntu/udapeople-app
     - cd /udapeople-app
     - npm install
     - pm2 stop default
