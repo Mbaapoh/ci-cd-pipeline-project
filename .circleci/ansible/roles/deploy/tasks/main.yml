@@ -12,9 +12,6 @@
   synchronize:
     src:  /root/project/backend.tar.gz
     dest: ~/backend.tar.gz
-    owner: ubuntu
-    group: ubuntu
-    mode: 0777
   register: check_copy_error
 - debug: 
     var: check_copy_error
