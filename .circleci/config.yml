@@ -14,7 +14,8 @@ commands:
                 
                 aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
                 aws cloudformation delete-stack --stack-name udapeople-backend-stack-${CIRCLE_WORKFLOW_ID:0:7}
-                aws cloudformation delete-stack --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} 
+                aws cloudformation delete-stack --stack-name udapeople-backend-stack-${CIRCLE_WORKFLOW_ID:0:7}
+                aws cloudformation delete-stack --stack-name initial-stack-${CIRCLE_WORKFLOW_ID:0:7} 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.  
     parameters:
@@ -430,19 +431,10 @@ jobs:
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"
 
-            
-      - run:
-          name: List S3 buckets and work flow ids
-          command: |
-            aws s3 ls
-            echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - run:
-          name: Deleting unused stacks and resources
-          command: |
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
               echo "-----------------Deleting old unused resoruces----------------"
+              echo OldWorkflowID: "${OldWorkflowID}"
               aws s3 rm s3://udapeople-"${OldWorkflowID}"  --recursive
               echo OldWorkflowID: "${OldWorkflowID}"
               echo "-----------------Finished deleting files in s3----------------"
