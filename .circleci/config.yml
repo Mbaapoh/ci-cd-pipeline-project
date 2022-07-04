@@ -442,10 +442,12 @@ jobs:
           command: |
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
-              aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
-              aws cloudformation delete-stack --stack-name udapeople-backend-stack-${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name udapeople-frontend-stack-${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name Initial-stack-${OldWorkflowID}
+              echo "-----------------Deleting old unused resoruces----------------"
+              aws s3 rm s3://${OldWorkflowID} --recursive
+              aws cloudformation delete-stack --stack-name ${OldWorkflowID}
+              aws cloudformation delete-stack --stack-name ${OldWorkflowID}
+              aws cloudformation delete-stack --stack-name ${OldWorkflowID}
+              echo "-----------------Finished Deleting old unused resoruces----------------"
             else
               echo "$OldWorkflowID==$CurrentWorkflowID => Stack is maintained..."
             fi
