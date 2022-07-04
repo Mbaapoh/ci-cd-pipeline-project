@@ -10,11 +10,11 @@ commands:
               name: Destroying the environments ${CIRCLE_WORKFLOW_ID:0:7} 
               when: on_fail
               command: |
-                echo "Destroying environment: << parameters.workflow_id >> "
+                echo "Destroying environment: ${CIRCLE_WORKFLOW_ID:0:7} "
                 
-                aws s3 rm s3://udapeople-<< parameters.workflow_id >> --recursive
-                aws cloudformation delete-stack --stack-name udapeople-backend-stack-<< parameters.workflow_id >> 
-                aws cloudformation delete-stack --stack-name udapeople-frontend-stack-<< parameters.workflow_id >>     
+                aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+                aws cloudformation delete-stack --stack-name udapeople-backend-stack-${CIRCLE_WORKFLOW_ID:0:7}
+                aws cloudformation delete-stack --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.  
     parameters:
@@ -157,15 +157,8 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople-backend-project-${CIRCLE_WORKFLOW_ID:0:7}  \
               --stack-name udapeople-backend-stack-${CIRCLE_WORKFLOW_ID:0:7} \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
-              
-      - run:
-          name: Destroy back-end infrastructure
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name udapeople-backend-stack-${CIRCLE_WORKFLOW_ID:0:7} 
-          when: on_fail
-              
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} 
+                     
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -174,13 +167,6 @@ jobs:
               --tags project=udapeople-frontend-project-${CIRCLE_WORKFLOW_ID:0:7} \
               --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-
-      - run:
-            name: Destroy front-end infrastructure 
-            command: |
-              aws cloudformation delete-stack --stack-name udapeople-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7} 
-            when: on_fail 
-      
     
       - run:
           name: Add back-end ip to ansible inventory
@@ -298,7 +284,7 @@ jobs:
             export BACKEND_IP=$(
               aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople-backend-project-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:project,Values=udapeople-backend-project-${CIRCLE_WORKFLOW_ID:0:7} \
               --output text
               )
             echo BACKEND_IP
@@ -421,8 +407,8 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --stack-name InitialStack \
-              --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name Initial-stack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --parameter-overrides WorkflowID=udapeople-${CIRCLE_WORKFLOW_ID:0:7} \
               --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7} 
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
@@ -451,6 +437,7 @@ jobs:
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-stack-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-stack-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "Initial-stack-${OldWorkflowID}"
             else
               echo "$OldWorkflowID==$CurrentWorkflowID => Stack is maintained..."
             fi
