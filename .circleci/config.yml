@@ -444,9 +444,10 @@ jobs:
             then
               echo "-----------------Deleting old unused resoruces----------------"
               aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}  --recursive
-              aws cloudformation delete-stack --stack-name ${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name ${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name ${OldWorkflowID}
+              echo "-----------------Finished deleting files in s3----------------"
+              aws cloudformation delete-stack --stack-name "${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "${OldWorkflowID}"
               echo "-----------------Finished Deleting old unused resoruces----------------"
             else
               echo "$OldWorkflowID==$CurrentWorkflowID => Stack is maintained..."
