@@ -448,7 +448,7 @@ jobs:
               echo "-----------------Finished deleting files in s3----------------"
               aws cloudformation delete-stack --stack-name "udapeople-backend-stack-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-stack-${OldWorkflowID}"
-              echo "-----------------Finished Deleting old unused resoruces----------------"
+              echo "-----------------Finished Deleting old unused resoruces----------------."
             else
               echo "$OldWorkflowID==$CurrentWorkflowID => Stack is maintained..."
             fi
