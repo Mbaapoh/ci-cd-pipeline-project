@@ -432,12 +432,12 @@ jobs:
       - run:
           name: Deleting unused stacks and resources
           command: |
-            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
+            if [[ ${CIRCLE_WORKFLOW_ID:0:7} != ${OldWorkflowID}" ]]
             then
-              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-stack-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-stack-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "Initial-stack-${OldWorkflowID}"
+              aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
+              aws cloudformation delete-stack --stack-name udapeople-backend-stack-${OldWorkflowID}
+              aws cloudformation delete-stack --stack-name udapeople-frontend-stack-${OldWorkflowID}
+              aws cloudformation delete-stack --stack-name Initial-stack-${OldWorkflowID}
             else
               echo "$OldWorkflowID==$CurrentWorkflowID => Stack is maintained..."
             fi
