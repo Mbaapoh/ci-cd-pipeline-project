@@ -369,3 +369,74 @@ workflows:
     npm install
     pm2 stop default
     pm2 start npm -- start
+
+
+
+
+
+global:
+  scrape_interval: 15s
+  external_labels:
+    monitor: 'prometheus'
+
+scrape_configs:
+
+  - job_name: 'udapeople_app'
+
+    static_configs:
+
+      - targets: ['ec2-44-203-55-84.compute-1.amazonaws.com:9100']
+  - job_name: 'prometheus'
+
+    static_configs:
+
+      - targets: ['localhost:9100']
+
+
+
+
+global:
+  scrape_interval: 1s
+  evaluation_interval: 1s
+
+rule_files:
+ - /etc/prometheus/rules.yml
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - localhost:9093
+
+scrape_configs:
+  - job_name: 'udapeople_app'
+      - static_configs:
+        - targets: ['ec2-44-203-55-84.compute-1.amazonaws.com:9100']
+
+  - job_name: 'prometheus'
+      - static_configs:
+        - targets: ['localhost:9100']
+
+  - job_name: 'node'
+    ec2_sd_configs:
+      - region: us-east-1
+        access_key: AKIA3GTZFKYJYX6XNEBM
+        secret_key: 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
+        port: 9100
+
+
+
+
+route:
+  group_by: [Alertname]
+  receiver: gmail-notifications'
+
+receivers:
+- name: email-me
+  email_configs:
+  - to: mbatechnologying@gmail.com
+    from: mbatechnologying@gmail.com
+    smarthost: smtp.gmail.com:587
+    auth_username: mbatechnologying@gmail.com
+    auth_identity: mbatechnologying@gmail.com
+    auth_password: rmtsuhtpwinddjud
