@@ -374,24 +374,6 @@ workflows:
 
 
 
-global:
-  scrape_interval: 15s
-  external_labels:
-    monitor: 'prometheus'
-
-scrape_configs:
-
-  - job_name: 'udapeople_app'
-
-    static_configs:
-
-      - targets: ['ec2-44-203-55-84.compute-1.amazonaws.com:9100']
-  - job_name: 'prometheus'
-
-    static_configs:
-
-      - targets: ['localhost:9100']
-
 
 
 
