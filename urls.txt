@@ -1,2 +1,2 @@
 URL01:     https://github.com/Mbaapoh/ci-cd-pipeline-project.git
-URL02:
+URL02:     https://d38p186ahygecb.cloudfront.net or http://udapeople-0e3e9ee.s3-website-us-east-1.amazonaws.com

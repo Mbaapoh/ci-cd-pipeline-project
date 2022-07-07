@@ -14,7 +14,7 @@ alerting:
 scrape_configs:
   - job_name: 'udapeople_app'
     static_configs:
-      - targets: ['ec2-34-201-72-58.compute-1.amazonaws.com:9100']
+      - targets: ['ec2-54-91-201-53.compute-1.amazonaws.com']
 
   - job_name: 'prometheus'
     static_configs:

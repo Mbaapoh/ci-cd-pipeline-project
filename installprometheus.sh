@@ -10,17 +10,7 @@ sudo cp -r prometheus-2.19.0.linux-amd64/consoles /etc/prometheus
 sudo cp -r prometheus-2.19.0.linux-amd64/console_libraries /etc/prometheus
 sudo cp prometheus-2.19.0.linux-amd64/promtool /usr/local/bin/
 rm -rf prometheus-2.19.0.linux-amd64.tar.gz prometheus-2.19.0.linux-amd64
-cat > /etc/prometheus/prometheus.yml <<'endmsg'
-global:
-  scrape_interval: 15s
-  external_labels:
-    monitor: 'prometheus'
 
-scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-endmsg
 cat > /etc/systemd/system/prometheus.service <<'endmsg'
 [Unit]
 Description=Prometheus
@@ -50,19 +40,38 @@ sudo systemctl daemon-reload
 sudo systemctl enable prometheus
 
 
-sudo systemctl restart prometheus
-sudo systemctl status prometheus
 
 cat > /etc/prometheus/prometheus.yml <<'endmsg'
 global:
   scrape_interval: 1s
   evaluation_interval: 1s
 
+rule_files:
+ - /etc/prometheus/rules.yml
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - localhost:9093
+
 scrape_configs:
+  - job_name: 'udapeople_app'
+    static_configs:
+      - targets: ['ec2-54-91-201-53.compute-1.amazonaws.com']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9100']
+
   - job_name: 'node'
     ec2_sd_configs:
       - region: us-east-1
         access_key: 
-        secret_key: 
+        secret_key:
         port: 9100
 endmsg
+
+
+sudo systemctl restart prometheus
+sudo systemctl status prometheus
